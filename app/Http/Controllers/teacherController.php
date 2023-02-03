@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class studentController extends Controller
+class teacherController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +16,9 @@ class studentController extends Controller
     {
         //
         $url = env('URL_SERVER_API', 'http://127.0.0.1:8000/api/');
-        $response = Http::get($url . '/Estudiantes');
-        $students = $response->json();
-        return view('students.students', compact('students'));
+        $response = Http::get($url . '/Profesores');
+        $teachers = $response->json();
+        return view('teachers.teachers', compact('teachers'));
     }
 
     /**
@@ -31,7 +29,7 @@ class studentController extends Controller
     public function create()
     {
         //
-        return view('students.studentsCreate');
+        return view('teachers.teachersCreate');
     }
 
     /**
@@ -43,33 +41,29 @@ class studentController extends Controller
     public function store(Request $request)
     {
         //
-        $validated = $request->validate([
-            'name' => 'required',
-            'dni' => 'required',
-            'last_name' => 'required',
-            'inscription_date' => 'required',
-        ]);
-
-        $inscription_date = Carbon::parse($request->inscription_date);
-        $now = Carbon::now();
-        $diffInMonths = $inscription_date->diffInMonths($now);
-        $semester = round($diffInMonths / 6);
-
         $url = env('URL_SERVER_API', 'http://127.0.0.1:8000/api/');
 
-        $response = Http::post($url . '/Estudiantes', [
+        $validated = $request->validate([
+            'dni' => 'required',
+            'name' => 'required',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+        ]);
+
+        $response = Http::post($url . '/Profesores', [
             'dni' => $request->dni,
             'name' => $request->name,
             'last_name' => $request->last_name,
-            'inscription_date' => $request->inscription_date,
-            'email' => $request->email,
-            'semester' => $semester,
             'address' => $request->address,
-            'phone' => $request->phone
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'city' => $request->city,
         ]);
 
         // return $response->json();
-        return redirect()->route('studentIndex');
+        return redirect()->route('teacherIndex');
     }
 
     /**
@@ -78,14 +72,14 @@ class studentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($student)
+    public function show($teacher)
     {
         //
         $url = env('URL_SERVER_API', 'http://127.0.0.1:8000/api/');
-        $response = Http::get($url . '/Estudiantes/' . $student);
-        $student = $response->json();
-        return view('students.studentsView', compact('student'));
-        // $response 
+        $response = Http::get($url . '/Profesores/' . $teacher);
+        $teacher = $response->json();
+
+        return view('teachers.teachersView', compact('teacher'));
     }
 
     /**
@@ -94,13 +88,13 @@ class studentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($student)
+    public function edit($teacher)
     {
         //
         $url = env('URL_SERVER_API', 'http://127.0.0.1:8000/api/');
-        $response = Http::get($url . '/Estudiantes/' . $student);
-        $student = $response->json();
-        return view('students.studentEdit', compact('student'));
+        $response = Http::get($url . '/Profesores/' . $teacher);
+        $teacher = $response->json();
+        return view('teachers.teachersEdit', compact('teacher'));
     }
 
     /**
@@ -110,30 +104,31 @@ class studentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $student)
+    public function update(Request $request, $teacher)
     {
         //
-        // dd($request);
         $url = env('URL_SERVER_API', 'http://127.0.0.1:8000/api/');
 
-        $inscription_date = Carbon::parse($request->inscription_date);
-        $now = Carbon::now();
-        $diffInMonths = $inscription_date->diffInMonths($now);
-        $semester = round($diffInMonths / 6);
+        $validated = $request->validate([
+            'dni' => 'required',
+            'name' => 'required',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+        ]);
 
-        $response = Http::put($url . '/Estudiantes/' . $student, [
+        $response = Http::put($url . '/Profesores/' . $teacher, [
             'dni' => $request->dni,
             'name' => $request->name,
             'last_name' => $request->last_name,
-            'inscription_date' => $request->inscription_date,
-            'email' => $request->email,
-            'semester' => $semester,
             'address' => $request->address,
-            'phone' => $request->phone
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'city' => $request->city,
         ]);
 
-        $student = $response->json();
-        return redirect()->route('studentIndex');
+        return redirect()->route('teacherIndex');
     }
 
     /**
@@ -142,12 +137,11 @@ class studentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($student)
+    public function destroy($teacher)
     {
         //
         $url = env('URL_SERVER_API', 'http://127.0.0.1:8000/api/');
-        $response = Http::delete($url . '/Estudiantes/' . $student);
-
-        return redirect()->route('studentIndex');
+        $response = Http::delete($url . '/Profesores/' . $teacher);
+        return redirect()->route('teacherIndex');
     }
 }

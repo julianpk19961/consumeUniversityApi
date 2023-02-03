@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form action="{{ route('studentStored') }}" method="post">
+    <form action="{{ route('teacherStored') }}" method="post">
 
         @csrf
 
@@ -19,17 +19,17 @@
         <br>
         <x-inputdiv fieldname="last_name" showname="Apellido" placeholder="Digite el apellido" />
         <br>
-        <x-inputdiv fieldname="inscription_date" showname="Fecha Inscripción" placeholder="Fecha Ingreso"
-            type="date" />
+        <x-inputdiv fieldname="address" showname="Dirección" placeholder="Digite la dirección" />
+        <br>
+        <x-inputdiv fieldname="city" showname="Ciudad" placeholder="Digite la ciudad" />
         <br>
         <x-inputdiv fieldname="phone" showname="Teléfono" placeholder="Teléfono" type="tel" />
         <br>
         <x-inputdiv fieldname="email" showname="Correo Electronico" placeholder="Digite correo electronico"
             type="email" />
         <br>
-        <x-inputdiv fieldname="address" showname="Dirección Residencia" placeholder="Digite la dirección" />
 
-        <input type="button" onclick="location.href='{{ route('studentIndex') }}';" value="Cancelar" />
+        <input type="button" onclick="location.href='{{ route('teacherIndex') }}';" value="Cancelar" />
         <button type="submit">Guardar</button>
 
     </form>
